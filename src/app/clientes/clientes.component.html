@@ -1,0 +1,37 @@
+<div class="card border-success mb-3">
+  <div class="card-header">Clientes</div>
+  <div class="card-body text-success">
+    <h5 class="card-title">Listado de clientes</h5>
+    <button class="btn btn-primary mb-2" [routerLink]="'/clientes/form'">
+      Crear cliente
+    </button>
+    <table class="table table-bordered" *ngIf="clientes?.length else noHayRegistros">
+      <caption class="mt-2 pb-0">{{clientes.length}} Clientes</caption>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Fecha</th>
+          <th>Editar</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientes">
+          <td>{{cliente.id}}</td>
+          <td>{{cliente.nombre}}</td>
+          <td>{{cliente.apellido}}</td>
+          <td>{{cliente.email}}</td>
+          <td>{{cliente.createAt}}</td>
+          <td><button [routerLink]="['/clientes/form', cliente.id]" class="btn btn-warning">Editar</button></td>
+          <td><button (click)="delete(cliente)" class="btn btn-danger">Eliminar</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noHayRegistros>
+      <div class="alert alert-info">¡No hay registros en base de datos!</div>
+    </ng-template>
+  </div>
+</div>
