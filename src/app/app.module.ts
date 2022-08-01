@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -39,7 +39,7 @@ const ROUTES: Routes = [
     FormsModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [ClienteService],
+  providers: [ClienteService, {provide: LOCALE_ID, useValue: 'es-CO'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
