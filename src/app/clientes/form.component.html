@@ -1,7 +1,7 @@
 <div class="card bg-dark text-white mt-3 mx-auto" style="max-width: 70%;">
   <div class="card-header">{{titulo}}</div>
   <div class="card-body">
-    <form class='form-floating'>
+    <form class='form-floating' #clienteForm="ngForm">
       <div class='form-floating mb-3'>
         <input type="text" id='nombre' class='form-control' [(ngModel)]="cliente.nombre" name='nombre'
           placeholder="Digite su nombre..." required minlength="4" #nombre="ngModel">
@@ -33,9 +33,11 @@
         <button class='btn btn-primary mt-3' (click)="create()" >{{titulo}}</button>
       </div> -->
       <div class="d-flex justify-content-between">
-        <button class='btn btn-primary mt-3' (click)="create()" *ngIf="!cliente.id else elseBlock">{{titulo}}</button>
+        <button class='btn btn-primary mt-3' (click)="create()" *ngIf="!cliente.id else elseBlock" [disabled]="!clienteForm.form.valid">
+          {{titulo}}
+        </button>
         <ng-template #elseBlock>
-          <button class='btn btn-primary mt-3' (click)="update(cliente)">{{titulo}}</button>
+          <button class='btn btn-primary mt-3' (click)="update(cliente)" [disabled]="!clienteForm.form.valid">{{titulo}}</button>
         </ng-template>
       </div>
     </form>
