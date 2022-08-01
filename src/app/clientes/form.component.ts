@@ -10,8 +10,9 @@ import Swal from 'sweetalert2';
 })
 export class FormComponent implements OnInit {
 
-  public cliente: Cliente = new Cliente();
-  public titulo: string = 'Crear cliente'
+  cliente: Cliente = new Cliente();
+  titulo: string = 'Crear cliente';
+  errores: string[];
 
   constructor(
     private clienteService: ClienteService,
@@ -35,24 +36,34 @@ export class FormComponent implements OnInit {
       })
     }
 
-    create(): void {
-      this.clienteService.create(this.cliente)
-      .subscribe(cliente => {
-        this.cliente = cliente;
-        this.router.navigate(['/clientes']);
-        Swal.fire(this.titulo, `El client ${cliente.nombre} ha sido creado con éxito!`, 'success');
-      }
-      )
-    }
+  create(): void {
+    this.clienteService.create(this.cliente)
+      .subscribe({
+        next: cliente => {
+          this.cliente = cliente;
+          this.router.navigate(['/clientes']);
+          Swal.fire(this.titulo, `El client ${cliente.nombre} ha sido creado con éxito!`, 'success');
+        },
+        error: err => {
+          this.errores = err.error.errores as string[];
+          console.error(err.error.errores)
+        }
+      })
+  }
 
-    update(cliente: Cliente) {
-      console.log(cliente)
-      this.clienteService.update(cliente)
-      .subscribe(json => {
-        this.router.navigate(['/clientes']);
-        console.log(json.cliente)
-        Swal.fire(this.titulo, `${json.mensaje} => ${json.cliente.nombre}`, 'success')
-      }
-    )
+  update(cliente: Cliente) {
+    console.log(cliente)
+    this.clienteService.update(cliente)
+      .subscribe({
+        next: json => {
+          this.router.navigate(['/clientes']);
+          console.log(json.cliente)
+          Swal.fire(this.titulo, `${json.mensaje} => ${json.cliente.nombre}`, 'success')
+        },
+        error: err => {
+          this.errores = err.error.errores as string[];
+          console.error(err.error.errores)
+        }
+      })
   }
 }

@@ -1,10 +1,15 @@
+<ul class="alert alert-danger" *ngIf="errores">
+  <li *ngFor="let err of errores">
+    {{err}}
+  </li>
+</ul>
 <div class="card bg-dark text-white mt-3 mx-auto" style="max-width: 70%;">
   <div class="card-header">{{titulo}}</div>
   <div class="card-body">
     <form class='form-floating' #clienteForm="ngForm">
       <div class='form-floating mb-3'>
         <input type="text" id='nombre' class='form-control' [(ngModel)]="cliente.nombre" name='nombre'
-          placeholder="Digite su nombre..." required minlength="4" #nombre="ngModel">
+          placeholder="Digite su nombre..." #nombre="ngModel"> <!-- required minlength="4"  -->
         <label for="nombre" class="text-muted">Nombre</label>
         <div class="alert alert-danger py-0" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
           <span *ngIf="nombre.errors.required">El nombre es requerido</span>
@@ -13,7 +18,7 @@
       </div>
       <div class='form-floating mb-3'>
         <input type="text" id='apellido' class='form-control' [(ngModel)]="cliente.apellido" name='apellido'
-          placeholder="Digite su apellido..." required #apellido="ngModel">
+          placeholder="Digite su apellido..." #apellido="ngModel"> <!--  required -->
         <label for="apellido" class="text-muted">Apellido</label>
         <div class="alert alert-danger py-0" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
           <span *ngIf="apellido.errors.required">El apellido es requerido</span>
@@ -21,7 +26,7 @@
       </div>
       <div class='form-floating mb-3'>
         <input type="email" id='email' class='form-control' [(ngModel)]="cliente.email" name='email'
-          placeholder="Digite su email..." required email #email="ngModel">
+          placeholder="Digite su email..." #email="ngModel"> <!-- required email  -->
         <label for="email" class="text-muted">Email</label>
         <div class="alert alert-danger py-0" *ngIf="email.invalid && (email.dirty || email.touched)">
           <span *ngIf="email.errors.required">El email es requerido</span>
