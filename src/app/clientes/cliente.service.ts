@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Cliente } from './cliente'
 // import { CLIENTES } from './clientes.json'
-import { Observable, of, throwError, map, catchError } from 'rxjs'
+import { Observable, of, throwError, map, catchError, tap } from 'rxjs'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router'
@@ -20,16 +20,22 @@ export class ClienteService {
   getClientes(): Observable<Cliente[]> {
     // return of(CLIENTES)
     // return this.http.get<Cliente[]>(this.urlEndPoint) // Sin map
-    return this.http.get(this.urlEndPoint).pipe(map(
-      response => {
+    return this.http.get(this.urlEndPoint).pipe(
+      tap(response => {
+        console.log('Tap 1')
+        const clientes = response as Cliente[]
+        clientes.forEach(cliente => console.log(cliente.nombre))
+      }),
+      map(response => {
         let clientes = response as Cliente[]
         return clientes.map(cliente => {
           cliente.nombre = cliente.nombre.toUpperCase()
           // cliente.createAt = formatDate(cliente.createAt, 'EEEE d, MMMM y', 'es') // fullDate
           return cliente
         })
-      }
-    )) // Con map
+      }),
+      tap(response => response.forEach( cliente => console.log(cliente.nombre))) // Toma los cambios que hizo el map
+    ) // Con map
   }
 
   // Obteniendo sólo el cliente de la respuesta del back

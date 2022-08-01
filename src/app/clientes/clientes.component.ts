@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import Swal from 'sweetalert2';
-import { Cliente } from './cliente';
-import { ClienteService } from './cliente.service';
-
+import { Component, OnInit } from '@angular/core'
+import Swal from 'sweetalert2'
+import { Cliente } from './cliente'
+import { ClienteService } from './cliente.service'
+import { tap } from 'rxjs'
 
 @Component({
   selector: 'app-clientes',
@@ -10,16 +10,16 @@ import { ClienteService } from './cliente.service';
 })
 export class ClientesComponent implements OnInit {
 
-  clientes: Cliente[];
+  clientes: Cliente[]
   constructor(private clienteService: ClienteService) { }
 
   ngOnInit(): void {
-    this.clienteService.getClientes().subscribe( clientes => {
-      this.clientes = clientes;
-    });
+    this.clienteService.getClientes().pipe(
+      tap(clientes => this.clientes = clientes)
+    ).subscribe()
   }
 
-  delete(cliente: Cliente) : void {
+  delete(cliente: Cliente): void {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -46,10 +46,8 @@ export class ClientesComponent implements OnInit {
               `${json.mensaje} => ${cliente.nombre}`,
               'success'
             )
-          }
-        )
+          })
       }
     })
   }
-
 }
