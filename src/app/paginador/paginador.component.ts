@@ -14,7 +14,19 @@ export class PaginadorComponent implements OnInit, OnChanges {
 
   constructor() { }
 
-  ngOnChanges(_changes: SimpleChanges): void {
+  ngOnInit(): void {
+    this.actualizarPaginador()
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    let paginadorActualizado = changes['paginador']
+
+    if (paginadorActualizado.previousValue) {
+      this.ngOnInit()
+    }
+  }
+
+  actualizarPaginador(): void {
     this.desde = Math.min(Math.max(1, this.paginador.number - 2), this.paginador.totalPages - 6)
     this.hasta = Math.min(this.paginador.totalPages, this.paginador.number + (6 - (this.paginador.number - this.desde)))
 
@@ -24,7 +36,4 @@ export class PaginadorComponent implements OnInit, OnChanges {
       this.paginas = new Array(this.paginador?.totalPages).fill(0).map((_valor, i) => i + 1)
     }
   }
-
-  ngOnInit(): void {}
-
 }
