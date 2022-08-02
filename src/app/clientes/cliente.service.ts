@@ -17,24 +17,23 @@ export class ClienteService {
   private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
   constructor(private http: HttpClient, private router: Router) { }
 
-  getClientes(): Observable<Cliente[]> {
+  getClientes(page: number): Observable<Cliente[]> {
     // return of(CLIENTES)
     // return this.http.get<Cliente[]>(this.urlEndPoint) // Sin map
-    return this.http.get(this.urlEndPoint).pipe(
-      tap(response => {
-        console.log('Tap 1')
-        const clientes = response as Cliente[]
-        clientes.forEach(cliente => console.log(cliente.nombre))
+    return this.http.get(`${this.urlEndPoint}/page/${page}`).pipe(
+      tap((response:any) => {
+        console.log('Tap 1');
+        (response.content as Cliente[]).forEach(cliente => console.log(cliente.nombre))
       }),
-      map(response => {
-        let clientes = response as Cliente[]
-        return clientes.map(cliente => {
+      map((response: any) => {
+        (response.content as Cliente[]).forEach(cliente => {
           cliente.nombre = cliente.nombre.toUpperCase()
           // cliente.createAt = formatDate(cliente.createAt, 'EEEE d, MMMM y', 'es') // fullDate
           return cliente
         })
+        return response;
       }),
-      tap(response => response.forEach( cliente => console.log(cliente.nombre))) // Toma los cambios que hizo el map
+      tap((response: any) => (response.content as Cliente[]).forEach( cliente => console.log(cliente.nombre))) // Toma los cambios que hizo el map
     ) // Con map
   }
 

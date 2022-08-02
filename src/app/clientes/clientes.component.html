@@ -33,5 +33,6 @@
     <ng-template #noHayRegistros>
       <div class="alert alert-info">¡No hay registros en base de datos!</div>
     </ng-template>
+    <paginador-nav *ngIf="paginador" [paginador] = "paginador"></paginador-nav>
   </div>
 </div>

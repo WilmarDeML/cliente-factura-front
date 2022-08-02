@@ -1,0 +1,24 @@
+<ul *ngIf="paginas?.length" class="pagination overflow-auto">
+  <li class="page-item" *ngIf="paginador.number > 0">
+    <a [routerLink]="['/clientes/page', paginador.number - 1]" class="page-link">&laquo;</a>
+  </li>
+
+  <li [ngClass]="paginador.first ? 'disabled page-item' : 'page-item'">
+    <a [routerLink]="['/clientes/page', 0]" class="page-link">Primera</a>
+  </li>
+
+  <li *ngFor="let pagina of paginas" [ngClass]="pagina-1 === paginador.number ? 'active' : ''" class="page-item">
+    <span *ngIf="pagina-1 === paginador.number else nextA" class="page-link">{{pagina}}</span>
+    <ng-template #nextA>
+      <a [routerLink]="['/clientes/page', pagina - 1]" class="page-link">{{pagina}}</a>
+    </ng-template>
+  </li>
+
+  <li [ngClass]="paginador.last ? 'disabled page-item' : 'page-item'">
+    <a [routerLink]="['/clientes/page', paginador.totalPages - 1]" class="page-link">Última</a>
+  </li>
+
+  <li class="page-item" *ngIf="paginador.number < paginador.totalPages - 1">
+    <a [routerLink]="['/clientes/page', paginador.number + 1]" class="page-link">&raquo;</a>
+  </li>
+</ul>

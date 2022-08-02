@@ -3,7 +3,7 @@
     {{err}}
   </li>
 </ul>
-<div class="card bg-dark text-white mt-3 mx-auto" style="max-width: 70%;">
+<div class="card bg-dark text-white mt-3 mx-auto" style="max-width: 70%">
   <div class="card-header">{{titulo}}</div>
   <div class="card-body">
     <form class='form-floating' #clienteForm="ngForm">
@@ -38,11 +38,13 @@
         <button class='btn btn-primary mt-3' (click)="create()" >{{titulo}}</button>
       </div> -->
       <div class="d-flex justify-content-between">
-        <button class='btn btn-primary mt-3' (click)="create()" *ngIf="!cliente.id else elseBlock" [disabled]="!clienteForm.form.valid">
+        <button class='btn btn-primary mt-3' (click)="create()" *ngIf="!cliente.id else elseBlock"
+          [disabled]="!clienteForm.form.valid">
           {{titulo}}
         </button>
         <ng-template #elseBlock>
-          <button class='btn btn-primary mt-3' (click)="update(cliente)" [disabled]="!clienteForm.form.valid">{{titulo}}</button>
+          <button class='btn btn-primary mt-3' (click)="update(cliente)"
+            [disabled]="!clienteForm.form.valid">{{titulo}}</button>
         </ng-template>
       </div>
     </form>
