@@ -18,7 +18,7 @@ export class ClientesComponent implements OnInit {
 
   ngOnInit(): void {
     this.activateRoute.paramMap.subscribe(params => {
-      let page: number = +params.get('page') ?? 0
+      let page: number = +params.get('page') || 1
       this.clienteService.getClientes(page).pipe(
         tap((response: any) => {
           this.clientes = response.content

@@ -20,7 +20,7 @@ export class ClienteService {
   getClientes(page: number): Observable<Cliente[]> {
     // return of(CLIENTES)
     // return this.http.get<Cliente[]>(this.urlEndPoint) // Sin map
-    return this.http.get(`${this.urlEndPoint}/page/${page}`).pipe(
+    return this.http.get(`${this.urlEndPoint}/page/${page - 1}`).pipe(
       tap((response:any) => {
         console.log('Tap 1');
         (response.content as Cliente[]).forEach(cliente => console.log(cliente.nombre))
