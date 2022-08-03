@@ -11,28 +11,45 @@
         <input type="text" id='nombre' class='form-control' [(ngModel)]="cliente.nombre" name='nombre'
           placeholder="Digite su nombre..." #nombre="ngModel"> <!-- required minlength="4"  -->
         <label for="nombre" class="text-muted">Nombre</label>
-        <div class="alert alert-danger py-0" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+
+        <!-- Para Validar desde el front -->
+        <!-- <div class="alert alert-danger py-0" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
           <span *ngIf="nombre.errors.required">El nombre es requerido</span>
           <span *ngIf="nombre.errors.minlength">El nombre debe contener al menos 4 caracteres</span>
-        </div>
+        </div> -->
       </div>
+
       <div class='form-floating mb-3'>
         <input type="text" id='apellido' class='form-control' [(ngModel)]="cliente.apellido" name='apellido'
           placeholder="Digite su apellido..." #apellido="ngModel"> <!--  required -->
         <label for="apellido" class="text-muted">Apellido</label>
-        <div class="alert alert-danger py-0" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
+
+        <!-- Para validar desde el front -->
+        <!-- <div class="alert alert-danger py-0" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
           <span *ngIf="apellido.errors.required">El apellido es requerido</span>
-        </div>
+        </div> -->
       </div>
+
       <div class='form-floating mb-3'>
         <input type="email" id='email' class='form-control' [(ngModel)]="cliente.email" name='email'
           placeholder="Digite su email..." #email="ngModel"> <!-- required email  -->
         <label for="email" class="text-muted">Email</label>
-        <div class="alert alert-danger py-0" *ngIf="email.invalid && (email.dirty || email.touched)">
+
+        <!-- Para Validar desde el front -->
+        <!-- <div class="alert alert-danger py-0" *ngIf="email.invalid && (email.dirty || email.touched)">
           <span *ngIf="email.errors.required">El email es requerido</span>
           <span *ngIf="email.errors.email">El email debe tener un formato válido</span>
-        </div>
+        </div> -->
       </div>
+
+      <div class='form-floating mb-3'>
+        <input matInput [matDatepicker]="picker" id='createAt' class='form-control d-inline w-50' [(ngModel)]="cliente.createAt"
+          name='createAt' placeholder="Digite la fecha...">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <label for="createAt" class="text-muted">Fecha</label>
+      </div>
+
       <!-- Otra forma que funciona para crear y actualizar -->
       <!-- <div class="d-flex justify-content-between">
         <button class='btn btn-primary mt-3' (click)="create()" >{{titulo}}</button>
