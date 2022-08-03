@@ -17,7 +17,7 @@ import localeES from '@angular/common/locales/es'
 import { registerLocaleData } from '@angular/common';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatNativeDateModule } from '@angular/material/core'
+import { MatMomentDateModule } from '@angular/material-moment-adapter'
 import { MatDatepickerModule } from '@angular/material/datepicker'
 
 registerLocaleData(localeES, 'es')
@@ -47,7 +47,7 @@ const ROUTES: Routes = [
     FormsModule,
     RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
-    MatNativeDateModule,
+    MatMomentDateModule,
     MatDatepickerModule
   ],
   providers: [ClienteService, {provide: LOCALE_ID, useValue: 'es-CO'}],
