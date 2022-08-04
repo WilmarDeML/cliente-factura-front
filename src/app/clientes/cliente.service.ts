@@ -21,26 +21,26 @@ export class ClienteService {
     // return of(CLIENTES)
     // return this.http.get<Cliente[]>(this.urlEndPoint) // Sin map
     return this.http.get(`${this.urlEndPoint}/page/${page - 1}`).pipe(
-      tap((response:any) => {
+      tap((respuesta: any) => {
         console.log('Tap 1');
-        (response.content as Cliente[]).forEach(cliente => console.log(cliente.nombre))
+        (respuesta.content as Cliente[]).forEach(cliente => console.log(cliente.nombre))
       }),
-      map((response: any) => {
-        (response.content as Cliente[]).forEach(cliente => {
+      map((respuesta: any) => {
+        (respuesta.content as Cliente[]).forEach(cliente => {
           cliente.nombre = cliente.nombre.toUpperCase()
           // cliente.createAt = formatDate(cliente.createAt, 'EEEE d, MMMM y', 'es') // fullDate
           return cliente
         })
-        return response;
+        return respuesta;
       }),
-      tap((response: any) => (response.content as Cliente[]).forEach( cliente => console.log(cliente.nombre))) // Toma los cambios que hizo el map
+      tap((respuesta: any) => (respuesta.content as Cliente[]).forEach( cliente => console.log(cliente.nombre))) // Toma los cambios que hizo el map
     ) // Con map
   }
 
   // Obteniendo sólo el cliente de la respuesta del back
   create(cliente: Cliente): Observable<Cliente> {
     return this.http.post<Cliente>(this.urlEndPoint, cliente, { headers: this.httpHeaders }).pipe(
-      map((response: any) => response.cliente as Cliente),
+      map((respuesta: any) => respuesta.cliente as Cliente),
       catchError(e => {
         if (e.status === 400) {
           return throwError(() => e)
@@ -79,6 +79,20 @@ export class ClienteService {
 
   delete(id: number): Observable<any> {
     return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, { headers: this.httpHeaders }).pipe(
+      catchError(e => {
+        console.log(e.error.mensaje)
+        Swal.fire(e.error.mensaje, e.error.error, 'error')
+        return throwError(() => e)
+      })
+    )
+  }
+
+  subirFoto(archivo: File, id): Observable<Cliente> {
+    let formData = new FormData()
+    formData.append('archivo', archivo)
+    formData.append('id', id)
+    return this.http.post(`${this.urlEndPoint}/upload`, formData).pipe(
+      map((respuesta: any) => respuesta.cliente as Cliente),
       catchError(e => {
         console.log(e.error.mensaje)
         Swal.fire(e.error.mensaje, e.error.error, 'error')
