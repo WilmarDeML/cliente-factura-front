@@ -10,9 +10,14 @@
             <li class="list-group-item">{{cliente.email}}</li>
             <li class="list-group-item">{{cliente.createAt | date:"fullDate"}}</li>
           </ul>
-          <div class="input-group">
+          <div class="input-group mb-1">
             <input (change)="seleccionarFoto($event)" type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
             <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Subir foto</button>
+          </div>
+          <div *ngIf="progreso > 0" class="progress" style="height: 2rem;">
+            <div class="progress-bar" role="progressbar" aria-label="Example with label" [ngStyle]="{width: progreso + '%'}" aria-valuenow="25" attr.aria-valuemin="0" attr.aria-valuemax={{progreso}}>
+              {{progreso}}%
+            </div>
           </div>
         </div>
         <div class="col-sm">
