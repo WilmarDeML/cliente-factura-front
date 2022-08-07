@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core'
 import { Cliente } from './cliente'
-// import { CLIENTES } from './clientes.json'
-import { Observable, of, throwError, map, catchError, tap } from 'rxjs'
+import { Observable, throwError, map, catchError, tap } from 'rxjs'
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http'
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router'
-import { formatDate } from '@angular/common'
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +16,6 @@ export class ClienteService {
   constructor(private http: HttpClient, private router: Router) { }
 
   getClientes(page: number): Observable<Cliente[]> {
-    // return of(CLIENTES)
-    // return this.http.get<Cliente[]>(this.urlEndPoint) // Sin map
     return this.http.get(`${this.urlEndPoint}/page/${page - 1}`).pipe(
       tap((respuesta: any) => {
         console.log('Tap 1');
@@ -34,7 +30,7 @@ export class ClienteService {
         return respuesta;
       }),
       tap((respuesta: any) => (respuesta.content as Cliente[]).forEach( cliente => console.log(cliente.nombre))) // Toma los cambios que hizo el map
-    ) // Con map
+    )
   }
 
   // Obteniendo sólo el cliente de la respuesta del back
