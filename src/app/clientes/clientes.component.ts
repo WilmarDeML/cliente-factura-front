@@ -4,6 +4,7 @@ import { Cliente } from './cliente'
 import { ClienteService } from './cliente.service'
 import { tap } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
+import { ModalService } from './detalle/modal.service'
 
 @Component({
   selector: 'app-clientes',
@@ -13,8 +14,12 @@ export class ClientesComponent implements OnInit {
 
   clientes: Cliente[]
   paginador: any
+  clienteSeleccionado: Cliente
 
-  constructor(private clienteService: ClienteService, private activateRoute: ActivatedRoute) { }
+  constructor(
+    private clienteService: ClienteService,
+    private activateRoute: ActivatedRoute,
+    private modalService: ModalService) { }
 
   ngOnInit(): void {
     this.activateRoute.paramMap.subscribe(params => {
@@ -25,6 +30,15 @@ export class ClientesComponent implements OnInit {
           this.paginador = response
         })
       ).subscribe()
+    })
+
+    this.modalService.notificarUpload.subscribe(cliente => {
+      this.clientes = this.clientes.map(clienteOriginal => {
+        if (cliente.id === clienteOriginal.id) {
+          clienteOriginal.foto = cliente.foto
+        }
+        return clienteOriginal
+      })
     })
   }
 
@@ -58,5 +72,10 @@ export class ClientesComponent implements OnInit {
           })
       }
     })
+  }
+
+  abrirModal(cliente: Cliente): void {
+    this.clienteSeleccionado = cliente
+    this.modalService.abrirCerrarModal()
   }
 }
