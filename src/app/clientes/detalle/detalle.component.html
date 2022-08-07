@@ -1,27 +1,45 @@
-<div *ngIf="cliente" class="card bg-dark text-white mt-3 mx-auto" style="max-width: 70%">
-  <div class="card-header">Detalles de {{cliente.nombre}}</div>
-  <div class="card-body">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm">
-          <ul class="list-group text-dark mb-3">
-            <li class="list-group-item active">{{cliente.nombre}}</li>
-            <li class="list-group-item">{{cliente.apellido}}</li>
-            <li class="list-group-item">{{cliente.email}}</li>
-            <li class="list-group-item">{{cliente.createAt | date:"fullDate"}}</li>
-          </ul>
-          <div class="input-group mb-1">
-            <input (change)="seleccionarFoto($event)" type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-            <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Subir foto</button>
-          </div>
-          <div *ngIf="progreso > 0" class="progress" style="height: 2rem;">
-            <div class="progress-bar" role="progressbar" aria-label="Example with label" [ngStyle]="{width: progreso + '%'}" aria-valuenow="25" attr.aria-valuemin="0" attr.aria-valuemax={{progreso}}>
-              {{progreso}}%
+<div class="abrir-modal animacion fadeIn" *ngIf="getEstadoModal()">
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de {{cliente.nombre}}</h5>
+          <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <ul class="list-group text-dark mb-3">
+                  <li class="list-group-item active">{{cliente.nombre}}</li>
+                  <li class="list-group-item">{{cliente.apellido}}</li>
+                  <li class="list-group-item">{{cliente.email}}</li>
+                  <li class="list-group-item">{{cliente.createAt | date:"fullDate"}}</li>
+                </ul>
+                <div class="input-group mb-1">
+                  <input (change)="seleccionarFoto($event)" type="file" class="form-control" id="inputGroupFile04"
+                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                  <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary"
+                    type="button" id="inputGroupFileAddon04">Subir foto</button>
+                </div>
+                <div *ngIf="progreso > 0" class="progress" style="height: 2rem;">
+                  <div class="progress-bar" role="progressbar" aria-label="Example with label"
+                    [ngStyle]="{width: progreso + '%'}" aria-valuenow="25" attr.aria-valuemin="0"
+                    attr.aria-valuemax={{progreso}}>
+                    {{progreso}}%
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm">
+                <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{cliente.foto}}"
+                  alt="Imagen cliente" class="img-thumbnail rounded">
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm">
-          <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{cliente.foto}}" alt="Imagen cliente" class="img-thumbnail rounded">
+        <div class="modal-footer">
+          <button (click)="cerrarModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
