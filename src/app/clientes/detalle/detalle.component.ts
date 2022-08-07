@@ -1,9 +1,9 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
+import { ModalService } from './modal.service';
 
 @Component({
   selector: 'detalle-cliente',
@@ -12,22 +12,14 @@ import { ClienteService } from '../cliente.service';
 })
 export class DetalleComponent implements OnInit {
 
-  cliente: Cliente
+  @Input() cliente: Cliente
   fotoSeleccionada: File
   progreso: number
+  estadoModal: boolean
 
-  constructor(private clienteService: ClienteService, private activatedRoute: ActivatedRoute) { }
+  constructor(private clienteService: ClienteService, private modalService: ModalService) { }
 
-  ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(params => {
-      let id: number = +params.get('id')
-      if (id) {
-        this.clienteService.getCliente(id).subscribe(cliente => {
-          this.cliente = cliente
-        })
-      }
-    })
-  }
+  ngOnInit(): void { }
 
   seleccionarFoto(event): void {
     this.fotoSeleccionada = event.target.files[0]
@@ -49,6 +41,7 @@ export class DetalleComponent implements OnInit {
           if(event.type === HttpEventType.Response){
             let respuesta: any = event.body
             this.cliente = respuesta.cliente as Cliente
+            this.modalService.notificarUpload.emit(this.cliente)
             Swal.fire('La foto se ha subido completamente!', `${respuesta.mensaje} ${this.cliente.foto}`, 'success')
           }
         }
@@ -56,5 +49,15 @@ export class DetalleComponent implements OnInit {
     } else {
       Swal.fire('Error Upload', 'Debe seleccionar un archivo de tipo imagen', 'error')
     }
+  }
+
+  cerrarModal(): void {
+    this.modalService.abrirCerrarModal()
+    this.fotoSeleccionada = null
+    this.progreso = 0
+  }
+
+  getEstadoModal(): boolean {
+    return this.modalService.modal
   }
 }
