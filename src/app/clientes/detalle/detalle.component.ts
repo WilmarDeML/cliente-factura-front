@@ -42,7 +42,7 @@ export class DetalleComponent implements OnInit {
             let respuesta: any = event.body
             this.cliente = respuesta.cliente as Cliente
             this.modalService.notificarUpload.emit(this.cliente)
-            Swal.fire('La foto se ha subido completamente!', `${respuesta.mensaje} ${this.cliente.foto}`, 'success')
+            Swal.fire('La foto se ha subido completamente!', `${respuesta.mensaje}`, 'success')
           }
         }
       )
