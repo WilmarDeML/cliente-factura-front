@@ -11,7 +11,7 @@ import { PaginadorComponent } from './paginador/paginador.component'
 
 import { ClienteService } from './clientes/cliente.service';
 import { RouterModule, Routes } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import localeES from '@angular/common/locales/es'
 import { registerLocaleData } from '@angular/common';
@@ -23,6 +23,7 @@ import { DetalleComponent } from './clientes/detalle/detalle.component';
 import { LoginComponent } from './usuarios/login.component';
 import { AuthGuard } from './usuarios/guards/auth.guard';
 import { RolGuard } from './usuarios/guards/rol.guard';
+import { TokenInterceptor } from './usuarios/interceptors/token.interceptor';
 
 registerLocaleData(localeES, 'es')
 
@@ -57,7 +58,11 @@ const ROUTES: Routes = [
     MatMomentDateModule,
     MatDatepickerModule
   ],
-  providers: [ClienteService, {provide: LOCALE_ID, useValue: 'es-CO'}],
+  providers: [
+    ClienteService,
+    {provide: LOCALE_ID, useValue: 'es-CO'},
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
