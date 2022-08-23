@@ -3,25 +3,25 @@
   <div class="card-header">Clientes</div>
   <div class="card-body text-success">
     <h5 class="card-title">Listado de clientes</h5>
-    <button class="btn btn-primary mb-2" [routerLink]="'/clientes/form'">
+    <button *ngIf="authService.hasRol('ROLE_ADMIN')" class="btn btn-primary mb-2" [routerLink]="'/clientes/form'">
       Crear cliente
     </button>
     <table class="table table-bordered" *ngIf="clientes?.length else noHayRegistros">
       <caption class="mt-2 pb-0">{{clientes.length}} Clientes</caption>
       <thead>
         <tr>
-          <th>#</th>
+          <th *ngIf="authService.hasRol('ROLE_USER')">#</th>
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Email</th>
           <th>Fecha</th>
-          <th>Editar</th>
-          <th>Eliminar</th>
+          <th *ngIf="authService.hasRol('ROLE_ADMIN')">Editar</th>
+          <th *ngIf="authService.hasRol('ROLE_ADMIN')">Eliminar</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let cliente of clientes">
-          <td>
+          <td *ngIf="authService.hasRol('ROLE_USER')">
             <img (click)="abrirModal(cliente)" *ngIf="cliente?.foto else sinFoto"
               src="http://localhost:8080/api/uploads/img/{{cliente.foto}}"
               alt="Imagen cliente" class="img-thumbnail rounded btn btn-light"
@@ -39,8 +39,12 @@
           <td>{{cliente.apellido | uppercase}}</td>
           <td>{{cliente.email}}</td>
           <td>{{cliente.createAt | date:'EEEE d, MMMM y'}}</td>
-          <td><button [routerLink]="['/clientes/form', cliente.id]" class="btn btn-warning">Editar</button></td>
-          <td><button (click)="delete(cliente)" class="btn btn-danger">Eliminar</button></td>
+          <td *ngIf="authService.hasRol('ROLE_ADMIN')">
+            <button [routerLink]="['/clientes/form', cliente.id]" class="btn btn-warning">Editar</button>
+          </td>
+          <td *ngIf="authService.hasRol('ROLE_ADMIN')">
+            <button (click)="delete(cliente)" class="btn btn-danger">Eliminar</button>
+          </td>
         </tr>
       </tbody>
     </table>

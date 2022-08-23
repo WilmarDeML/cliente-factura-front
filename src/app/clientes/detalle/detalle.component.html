@@ -18,7 +18,7 @@
                   <li class="list-group-item">{{cliente.createAt | date:"fullDate"}}</li>
                   <li class="list-group-item">{{cliente.region.nombre}}</li>
                 </ul>
-                <div class="input-group mb-1">
+                <div *ngIf="authService.hasRol('ROLE_ADMIN')" class="input-group mb-1">
                   <input (change)="seleccionarFoto($event)" type="file" class="form-control" id="inputGroupFile04"
                     aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                   <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary"

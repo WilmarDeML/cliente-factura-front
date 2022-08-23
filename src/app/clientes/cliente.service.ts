@@ -5,6 +5,7 @@ import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router'
 import { Region } from './region'
+import { AuthService } from '../usuarios/auth.service'
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,33 @@ import { Region } from './region'
 export class ClienteService {
 
   private urlEndPoint: string = 'http://localhost:8080/api/clientes'
-
   private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-  constructor(private http: HttpClient, private router: Router) { }
+
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
+
+  private agregarAuthorizationHeader() {
+    const token = this.authService.token
+    return token
+      ? this.httpHeaders.append('Authorization', `Bearer ${token}`)
+      : this.httpHeaders
+  }
+
+  private esNoAutorizado(e): boolean {
+    let esNoAutorizado = false
+    if (e.status === 401) {
+      if (this.authService.isAuthenticated()) {
+        this.authService.logout()
+      }
+      this.router.navigate(['/login'])
+      return  !esNoAutorizado
+    }
+    if (e.status === 403) {
+      Swal.fire('Acceso denegado', `Hola ${this.authService.usuario.username} no tienes acceso a este recurso`, 'warning')
+      this.router.navigate(['/clientes'])
+      return  !esNoAutorizado
+    }
+    return esNoAutorizado
+  }
 
   getClientes(page: number): Observable<Cliente[]> {
     return this.http.get(`${this.urlEndPoint}/page/${page - 1}`).pipe(
@@ -36,9 +61,12 @@ export class ClienteService {
 
   // Obteniendo sólo el cliente de la respuesta del back
   create(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(this.urlEndPoint, cliente, { headers: this.httpHeaders }).pipe(
+    return this.http.post<Cliente>(this.urlEndPoint, cliente, { headers: this.agregarAuthorizationHeader() }).pipe(
       map((respuesta: any) => respuesta.cliente as Cliente),
       catchError(e => {
+        if (this.esNoAutorizado(e)) {
+          return throwError(() => e)
+        }
         if (e.status === 400) {
           return throwError(() => e)
         }
@@ -50,8 +78,11 @@ export class ClienteService {
   }
 
   getCliente(id: number): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
+    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.agregarAuthorizationHeader()}).pipe(
       catchError(e => {
+        if (this.esNoAutorizado(e)) {
+          return throwError(() => e)
+        }
         this.router.navigate(['clientes'])
         console.log(e.error.mensaje)
         Swal.fire('Error al editar', e.error.mensaje, 'error')
@@ -62,8 +93,11 @@ export class ClienteService {
 
   // Obteniendo toda la respuesta del back
   update(cliente: Cliente): Observable<any> {
-    return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, { headers: this.httpHeaders }).pipe(
+    return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, { headers: this.agregarAuthorizationHeader() }).pipe(
       catchError(e => {
+        if (this.esNoAutorizado(e)) {
+          return throwError(() => e)
+        }
         if (e.status === 400) {
           return throwError(() => e)
         }
@@ -75,8 +109,11 @@ export class ClienteService {
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, { headers: this.httpHeaders }).pipe(
+    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, { headers: this.agregarAuthorizationHeader() }).pipe(
       catchError(e => {
+        if (this.esNoAutorizado(e)) {
+          return throwError(() => e)
+        }
         console.log(e.error.mensaje)
         Swal.fire(e.error.mensaje, e.error.error, 'error')
         return throwError(() => e)
@@ -88,13 +125,32 @@ export class ClienteService {
     let formData = new FormData()
     formData.append('archivo', archivo)
     formData.append('id', id)
+
+    let httpHeaders = new HttpHeaders()
+    const token = this.authService.token
+
+    if (token) {
+      httpHeaders = httpHeaders.append('Authorization', `Bearer ${token}`)
+    }
     const req = new HttpRequest('POST', `${this.urlEndPoint}/upload`, formData, {
-      reportProgress: true
+      reportProgress: true,
+      headers: httpHeaders
     });
-    return this.http.request(req)
+
+    return this.http.request(req).pipe(
+      catchError(e => {
+        this.esNoAutorizado(e)
+        return throwError(() => e)
+      })
+    )
   }
 
   getRegiones(): Observable<Region[]> {
-    return this.http.get<Region[]>(`${this.urlEndPoint}/regiones`)
+    return this.http.get<Region[]>(`${this.urlEndPoint}/regiones`, {headers: this.agregarAuthorizationHeader()}).pipe(
+      catchError(e => {
+        this.esNoAutorizado(e)
+        return throwError(() => e)
+      })
+    )
   }
 }
