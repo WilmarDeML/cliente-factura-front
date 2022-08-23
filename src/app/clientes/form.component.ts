@@ -44,8 +44,7 @@ export class FormComponent implements OnInit {
   }
 
   create(): void {
-    this.clienteService.create(this.cliente)
-      .subscribe({
+    this.clienteService.create(this.cliente).subscribe({
         next: cliente => {
           this.cliente = cliente
           this.router.navigate(['/clientes'])
@@ -60,8 +59,7 @@ export class FormComponent implements OnInit {
 
   update(cliente: Cliente) {
     console.log(cliente)
-    this.clienteService.update(cliente)
-      .subscribe({
+    this.clienteService.update(cliente).subscribe({
         next: json => {
           this.router.navigate(['/clientes'])
           console.log(json.cliente)
