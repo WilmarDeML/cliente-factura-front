@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { mergeMap, Observable, map } from 'rxjs';
+import Swal from 'sweetalert2';
 import { ClienteService } from '../clientes/cliente.service';
 import { Factura } from './models/factura';
 import { ItemFactura } from './models/item-factura';
@@ -24,7 +25,8 @@ export class FacturasComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private activatedRoute: ActivatedRoute,
-    private facturaService: FacturaService) { }
+    private facturaService: FacturaService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -50,12 +52,61 @@ export class FacturasComponent implements OnInit {
     let producto = event.option.value as Producto
     console.log(producto)
 
-    let nuevoItem = new ItemFactura()
-    nuevoItem.producto = producto
-    this.factura.items.push(nuevoItem)
+    if (this.existeItem(producto.id)) {
+      this.incrementarCantidad(producto.id)
+    } else {
+      let nuevoItem = new ItemFactura()
+      nuevoItem.producto = producto
+      this.factura.items.push(nuevoItem)
+    }
 
     this.autoCompleteControl.setValue('')
     event.option.focus()
     event.option.deselect()
+  }
+
+  actualizarCantidad(id: number, event: any): void {
+    let cantidad: number = +event.target.value
+
+    if(cantidad === 0) {
+      return this.eliminarItemFactura(id)
+    }
+
+    this.factura.items = this.factura.items.map((item: ItemFactura) => {
+      if(id === item.producto.id) {
+        item.cantidad = cantidad
+      }
+      return item
+    })
+  }
+
+  existeItem(id: number): boolean {
+    return this.factura.items.some((item: ItemFactura) => item.producto.id === id)
+  }
+
+  incrementarCantidad(id: number): void {
+    this.factura.items = this.factura.items.map((item: ItemFactura) => {
+      if(id === item.producto.id) {
+        ++item.cantidad
+      }
+      return item
+    })
+  }
+
+  eliminarItemFactura(id: number): void {
+    this.factura.items = this.factura.items.filter((item: ItemFactura) => item.producto.id !== id)
+  }
+
+  crearFactura(facturaForm: any): void {
+    if (!this.factura.items.length) {
+      this.autoCompleteControl.setErrors({'invalid': true})
+    }
+    if (facturaForm.form.valid && this.factura.items.length) {
+      this.facturaService.crearFactura(this.factura).subscribe(factura => {
+        console.log(factura)
+        Swal.fire(this.titulo, `Factura ${factura.descripcion} creada con éxito!`, 'success')
+        this.router.navigate(['/clientes'])
+      })
+    }
   }
 }

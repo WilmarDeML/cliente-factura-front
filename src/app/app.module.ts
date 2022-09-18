@@ -12,7 +12,7 @@ import { PaginadorComponent } from './paginador/paginador.component'
 import { ClienteService } from './clientes/cliente.service';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import localeES from '@angular/common/locales/es'
 import { registerLocaleData } from '@angular/common';
 
@@ -25,6 +25,12 @@ import { AuthGuard } from './usuarios/guards/auth.guard';
 import { RolGuard } from './usuarios/guards/rol.guard';
 import { TokenInterceptor } from './usuarios/interceptors/token.interceptor';
 import { AuthInterceptor } from './usuarios/interceptors/auth.interceptor';
+import { DetalleFacturaComponent } from './facturas/detalle-factura.component';
+import { FacturasComponent } from './facturas/facturas.component';
+
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 registerLocaleData(localeES, 'es')
 
@@ -35,7 +41,9 @@ const ROUTES: Routes = [
   {path: 'clientes/page/:page', component: ClientesComponent},
   {path: 'clientes/form', component: FormComponent, canActivate: [AuthGuard, RolGuard], data: {rol: 'ROLE_ADMIN'}},
   {path: 'clientes/form/:id', component: FormComponent, canActivate: [AuthGuard, RolGuard], data: {rol: 'ROLE_ADMIN'}},
-  {path: 'login', component: LoginComponent}
+  {path: 'login', component: LoginComponent},
+  {path: 'facturas/:id', component: DetalleFacturaComponent},
+  {path: 'facturas/form/:clienteId', component: FacturasComponent}
 ]
 
 @NgModule({
@@ -49,6 +57,8 @@ const ROUTES: Routes = [
     PaginadorComponent,
     DetalleComponent,
     LoginComponent,
+    DetalleFacturaComponent,
+    FacturasComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,7 +67,11 @@ const ROUTES: Routes = [
     RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
     MatMomentDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   providers: [
     ClienteService,
