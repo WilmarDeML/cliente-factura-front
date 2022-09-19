@@ -59,6 +59,7 @@ export class FormComponent implements OnInit {
 
   update(cliente: Cliente) {
     console.log(cliente)
+    this.cliente.facturas = null
     this.clienteService.update(cliente).subscribe({
         next: json => {
           this.router.navigate(['/clientes'])
