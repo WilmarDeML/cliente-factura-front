@@ -10,19 +10,19 @@
       <caption class="mt-2 pb-0">{{clientes.length}} Clientes</caption>
       <thead>
         <tr>
-          <th>#</th>
+          <th *ngIf="authService.hasRol('ROLE_USER')">#</th>
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Email</th>
           <th>Fecha</th>
-          <th>Crear factura</th>
+          <th *ngIf="authService.hasRol('ROLE_ADMIN')">Crear factura</th>
           <th *ngIf="authService.hasRol('ROLE_ADMIN')">Editar</th>
           <th *ngIf="authService.hasRol('ROLE_ADMIN')">Eliminar</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let cliente of clientes">
-          <td>
+          <td *ngIf="authService.hasRol('ROLE_USER')">
             <img (click)="abrirModal(cliente)" *ngIf="cliente?.foto else sinFoto"
               src="http://localhost:8080/api/uploads/img/{{cliente.foto}}"
               alt="Imagen cliente" class="img-thumbnail rounded btn btn-light"
@@ -40,7 +40,7 @@
           <td>{{cliente.apellido | uppercase}}</td>
           <td>{{cliente.email}}</td>
           <td>{{cliente.createAt | date:'EEEE d, MMMM y'}}</td>
-          <td>
+          <td *ngIf="authService.hasRol('ROLE_ADMIN')">
             <button [routerLink]="['/facturas/form', cliente.id]" class="btn btn-success">Crear factura</button>
           </td>
           <td *ngIf="authService.hasRol('ROLE_ADMIN')">
