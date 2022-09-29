@@ -105,7 +105,7 @@ export class FacturasComponent implements OnInit {
       this.facturaService.crearFactura(this.factura).subscribe(factura => {
         console.log(factura)
         Swal.fire(this.titulo, `Factura ${factura.descripcion} creada con éxito!`, 'success')
-        this.router.navigate(['/clientes'])
+        this.router.navigate(['/facturas', factura.id])
       })
     }
   }
