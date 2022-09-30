@@ -13,7 +13,7 @@ import { URL_BACKEND } from '../config/config'
 export class ClienteService {
 
   // private urlEndPoint: string = 'http://localhost:8080/api/clientes'
-  private urlEndPoint: string = `URL_BACKEND/api/clientes`
+  private urlEndPoint: string = `${URL_BACKEND}/api/clientes`
 
   constructor(private http: HttpClient, private router: Router) { }
 
