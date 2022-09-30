@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router'
 import { ModalService } from './detalle/modal.service'
 import { AuthService } from '../usuarios/auth.service'
 
+import { URL_BACKEND } from '../config/config'
+
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
@@ -16,6 +18,7 @@ export class ClientesComponent implements OnInit {
   clientes: Cliente[]
   paginador: any
   clienteSeleccionado: Cliente
+  urlBack: string = URL_BACKEND
 
   constructor(
     private clienteService: ClienteService,

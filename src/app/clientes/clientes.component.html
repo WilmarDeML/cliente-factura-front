@@ -24,7 +24,7 @@
         <tr *ngFor="let cliente of clientes">
           <td *ngIf="authService.hasRol('ROLE_USER')">
             <img (click)="abrirModal(cliente)" *ngIf="cliente?.foto else sinFoto"
-              src="http://localhost:8080/api/uploads/img/{{cliente.foto}}"
+              src="{{urlBack}}/api/uploads/img/{{cliente.foto}}"
               alt="Imagen cliente" class="img-thumbnail rounded btn btn-light"
               width="100"
             >

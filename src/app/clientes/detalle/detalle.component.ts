@@ -8,6 +8,8 @@ import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
 import { ModalService } from './modal.service';
 
+import { URL_BACKEND } from 'src/app/config/config';
+
 @Component({
   selector: 'detalle-cliente',
   templateUrl: './detalle.component.html',
@@ -19,6 +21,7 @@ export class DetalleComponent implements OnInit {
   fotoSeleccionada: File
   progreso: number
   estadoModal: boolean
+  urlBack: string = URL_BACKEND
 
   constructor(
     private clienteService: ClienteService,
